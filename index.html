@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>优品竞品分析 · PC / APP / 数据三维拆解</title>
+<style>
+:root {
+  --bg:  #f5f4f0; --bg2: #ffffff; --bg3: #eeece7;
+  --bd:  #e0ddd6; --bd2: #ccc9c0;
+  --t:   #1c1c1a; --t2:  #555550; --t3:  #8a8880;
+  --pc:  #1A5CA8; --app: #5040B8; --dat: #0C6B52;
+  --red: #C0392B; --org: #B87A14;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#181816;--bg2:#222220;--bg3:#2c2c29;
+    --bd:#383836;--bd2:#484844;--t:#e4e2dc;--t2:#a4a29c;--t3:#646260;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+strong{font-weight:600}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--t);min-height:100vh;padding:28px 20px 60px;line-height:1.6;
+}
+.wrap{max-width:920px;margin:0 auto}
+
+/* ── Header ─────────────────────────────── */
+.hdr{text-align:center;margin-bottom:30px}
+.hdr h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.hdr p{font-size:13px;color:var(--t3)}
+
+/* ── Tabs ────────────────────────────────── */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg2);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:24px}
+.tab{padding:15px 10px;text-align:center;cursor:pointer;font-size:14px;font-weight:500;color:var(--t2);border-right:1px solid var(--bd);transition:background .15s,color .15s;user-select:none}
+.tab:last-child{border-right:none}
+.tab:hover{background:var(--bg3)}
+.tab.active{color:#fff;font-weight:600}
+.tab.pc.active{background:var(--pc)}
+.tab.app.active{background:var(--app)}
+.tab.dat.active{background:var(--dat)}
+
+/* ── Section ─────────────────────────────── */
+.section{margin-bottom:28px}
+.sec-t{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+
+/* ── Product cards ───────────────────────── */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pcard{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.pcard::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.pc .pcard::before{background:var(--pc)}
+.app .pcard::before{background:var(--app)}
+.dat .pcard::before{background:var(--dat)}
+.pcard-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;gap:8px}
+.pcard-name{font-size:14px;font-weight:600;color:var(--t);flex:1}
+.ptag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:9px;flex-shrink:0;white-space:nowrap;margin-top:2px}
+.tag-b{background:#ddeafa;color:#1A5CA8}.tag-c{background:#ede8f8;color:#5040B8}.tag-bc{background:#dcf0e8;color:#0C6B52}
+@media(prefers-color-scheme:dark){
+  .tag-b{background:#162336;color:#6fa8dc}.tag-c{background:#1e1840;color:#9b8fda}.tag-bc{background:#0e2820;color:#4da88a}
+}
+.pcard-pos{font-size:12px;color:var(--t2);margin-bottom:9px;line-height:1.55}
+.pcard ul{list-style:none}
+.pcard li{font-size:12px;color:var(--t);padding:2px 0 2px 13px;position:relative;line-height:1.5}
+.pcard li::before{content:'·';position:absolute;left:3px;color:var(--t3)}
+
+/* ── Feature grid ────────────────────────── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fgrp{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:13px 14px}
+.fgrp-t{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:8px}
+.fgrp ul{list-style:none}
+.fgrp li{font-size:12px;color:var(--t);padding:2px 0 2px 13px;position:relative;line-height:1.5}
+.fgrp li::before{content:'·';position:absolute;left:3px;color:var(--t3)}
+
+/* ── Highlight cards ─────────────────────── */
+.hl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.hlcard{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.hl-label{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:9px;margin-bottom:9px;letter-spacing:.03em}
+.hlcard h3{font-size:14px;font-weight:600;color:var(--t);margin-bottom:7px}
+.hlcard .desc{font-size:12px;color:var(--t2);line-height:1.68;margin-bottom:10px}
+.pm-box{background:var(--bg3);border-left:3px solid var(--bd2);border-radius:0 7px 7px 0;padding:9px 12px}
+.pm-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:4px}
+.pm-box p{font-size:12px;color:var(--t2);line-height:1.65}
+
+/* ── Action list ─────────────────────────── */
+.actions{display:flex;flex-direction:column;gap:8px}
+.aitem{display:flex;align-items:flex-start;gap:10px;background:var(--bg2);border:1px solid var(--bd);border-radius:9px;padding:13px 15px}
+.pri{flex-shrink:0;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:2px}
+.p0{background:#C0392B;color:#fff}.p1{background:#B87A14;color:#fff}.p2{background:var(--bd2);color:var(--t2)}
+.atxt{flex:1}
+.atitle{font-size:13px;font-weight:600;color:var(--t);margin-bottom:3px}
+.adesc{font-size:12px;color:var(--t2);line-height:1.58}
+
+/* ── Panel show/hide ─────────────────────── */
+.panel{display:none}.panel.active{display:block}
+
+/* ── Footer ──────────────────────────────── */
+.footer{text-align:center;margin-top:40px;font-size:11px;color:var(--t3);padding-top:18px;border-top:1px solid var(--bd)}
+
+@media(max-width:620px){
+  .prod-grid,.hl-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .tabs{grid-template-columns:1fr}
+  .tab{border-right:none;border-bottom:1px solid var(--bd)}
+  .tab:last-child{border-bottom:none}
+}
+@media(max-width:420px){.feat-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <h1>优品财富科技 · 竞品三维拆解</h1>
+  <p>从 PC 端产品 · APP 端产品 · 数据板块 三个维度，全面梳理优品产品功能、亮点与可借鉴方向</p>
+</div>
+
+<div class="tabs">
+  <div class="tab pc active" onclick="sw('pc')">💻&nbsp; PC 端产品</div>
+  <div class="tab app"      onclick="sw('app')">📱&nbsp; APP 端产品</div>
+  <div class="tab dat"      onclick="sw('dat')">📊&nbsp; 数据板块</div>
+</div>
+
+<!-- ══════════ PC ══════════ -->
+<div class="panel pc active" id="p-pc">
+
+  <div class="section">
+    <div class="sec-t">产品矩阵</div>
+    <div class="prod-grid pc">
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">PC 综合解决方案</div><span class="ptag tag-b">B端输出</span></div>
+        <div class="pcard-pos">面向高净值及活跃用户的新一代行情终端，以组件化框架整体向机构输出，支持个性化定制</div>
+        <ul><li>行情展示 · 看盘 · 复盘 · 研盘</li><li>技术指标 · 股池管理 · 策略选股</li><li>PC 端投顾服务</li><li>标配互联网化运营后台</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">高端 PC 交易终端</div><span class="ptag tag-b">B端机构向</span></div>
+        <div class="pcard-pos">面向机构量化团队及高净值投资者，以极速交易能力为核心差异化，是量化一体化工作台</div>
+        <ul><li>内部延时 &lt;100 微秒 · 并发 &gt;5000/s</li><li>策略编写 + 回测 + API 一体化</li><li>股票 / 期货 / 期权多市场覆盖</li><li>本地 SDK · 量化因子平台</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">股牛牛 PC</div><span class="ptag tag-c">C端</span></div>
+        <div class="pcard-pos">大V智能辅助决策 + 投资教育服务平台，内容化程度最高，主打「学会投资」用户心智</div>
+        <ul><li>特色题材：3秒定位行业龙头</li><li>买卖点：B点买入 / S点卖出信号</li><li>独创超短+趋势战法复盘演练系统</li><li>实战直播室 · 全市场情绪量化指标</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">优品股票通 PC</div><span class="ptag tag-c">C端</span></div>
+        <div class="pcard-pos">一站式智能证券投资服务平台，覆盖全球市场，主打「全能综合」用户心智</div>
+        <ul><li>全球市场行情（沪深/港美/期货/基金）</li><li>智能策略：机器学习匹配最优组合</li><li>超级账户：多市场多券商多账户一体</li><li>大财经数据库 · 个性化快捷导航</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">核心功能清单</div>
+    <div class="feat-grid">
+      <div class="fgrp"><div class="fgrp-t">行情与看盘</div><ul>
+        <li>Level 1 / Level 2 行情展示</li>
+        <li>十档买卖盘（L2 深度盘口）</li>
+        <li>逐笔成交明细（L2 独有）</li>
+        <li>全市场行情统一微服务架构</li>
+        <li>全球多市场行情集成覆盖</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">分析与研究</div><ul>
+        <li>超级复盘演练（超短+趋势战法）</li>
+        <li>研盘功能（深度研究工具）</li>
+        <li>特色题材梳理（行业上下游）</li>
+        <li>市场情绪量化指标（全市场独家）</li>
+        <li>大财经数据库（海量内容整合）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">策略与交易</div><ul>
+        <li>股池管理 · 策略选股</li>
+        <li>买卖点信号系统（B/S点）</li>
+        <li>策略编写 + 历史回测平台</li>
+        <li>极速交易通道（&lt;100μs 延时）</li>
+        <li>超级账户（多市场多账户管理）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">L2 专属付费功能</div><ul>
+        <li>L2 资金排行（识别主力流向）</li>
+        <li>L2 监控预警（主力动向实时）</li>
+        <li>L2 专属技术指标（衍生功能）</li>
+        <li>主力资金追踪（高净值刚需）</li>
+        <li>L2 专属股票池</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">内容与投顾</div><ul>
+        <li>实战直播室（导师每日解盘）</li>
+        <li>热点题材实时解读</li>
+        <li>股池实战精讲内容</li>
+        <li>PC 端投顾服务入口</li>
+        <li>互联网化运营管理后台</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">机构专属能力</div><ul>
+        <li>组件化定制开发框架</li>
+        <li>量化因子平台（3000+ 因子）</li>
+        <li>交易 API 接入网关</li>
+        <li>本地 SDK 稳定集成</li>
+        <li>私有化部署支持</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">PM 视角 · 产品亮点拆解</div>
+    <div class="hl-grid">
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ddeafa;color:#1A5CA8">核心差异化</div>
+        <h3>Level 2 数据：最清晰的付费转化漏斗</h3>
+        <p class="desc">PC 大屏是 L2 数据价值最高的使用场景。十档盘口、逐笔成交的信息密度在大屏上极高，用户决策参考价值远超 APP。优品以 L2 为核心构建「免费看行情 → 付费看深度」的转化漏斗——L2 资金排行、监控预警、专属指标全部捆绑在会员权益里，让用户先感知 L2 的价值，再产生付费意愿。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>PC 端用户 ARPU 普遍高于移动端，L2 付费意愿更强、决策周期更短。L2 数据一旦用习惯，免费行情就像标清，回不去了——这是续费率极高的根本原因。我方若有 L2 数据资源，应优先在 PC 端建立付费产品，再延伸至 APP 端。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#fdf3e3;color:#B87A14">用户粘性</div>
+        <h3>超级复盘：习惯养成型产品的典范</h3>
+        <p class="desc">「独创超短+趋势战法复盘演练系统」帮助用户在历史行情中模拟交易、建立交易体系。优品打造的心智是「无复盘不交易」——这是典型的习惯养成型产品设计：用户一旦形成每天复盘的习惯，该产品就成为不可替代的日常工具，DAU 和留存都会显著提升。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>复盘工具的竞争壁垒在于「数据质量 × 战法内容积累」。先有工具，再积累内容，用内容筑高门槛，形成内容+工具的双飞轮。初期进入门槛不高，但时间积累起来的内容库是后来者很难复制的壁垒。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ede8f8;color:#5040B8">产品策略</div>
+        <h3>B/C 双端分层清晰，共享中台不内卷</h3>
+        <p class="desc">优品 PC 产品线有明确的客群分层：B 端输出机构定制方案（PC综合方案 + 高端交易终端），C 端自营两款差异化产品（股牛牛=教育向，股票通=综合向）。四款产品共享同一套中台能力，却面向完全不同的用户群，相互不蚕食。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>B 端产品背书 C 端品牌（「连机构都在用」），C 端流量支撑 B 端案例（「百万用户验证」）。两者形成正向循环——这是优品产品矩阵策略的精妙之处，值得我方在规划产品线时参考。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#dcf0e8;color:#0C6B52">机构壁垒</div>
+        <h3>极速交易：用技术规格直接锁定机构</h3>
+        <p class="desc">延时 &lt;100 微秒、策略编写+回测+实盘 API 一体化，是机构量化团队的刚性需求。这类产品的竞争不在于功能数量，而在于稳定性、延时和因子库丰富度。优品用技术指标作为门槛，直接筛选和锁定高价值的机构客户群。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>机构客户一旦接入，迁移成本极高（系统集成+人员培训+策略重写）。这类客户 LTV 高、流失率低，是值得专项投入的目标客群。建议先从量化回测平台切入，建立信任后延伸至实盘交易通道。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">可借鉴行动建议</div>
+    <div class="actions">
+      <div class="aitem"><span class="pri p0">P0</span><div class="atxt"><div class="atitle">建立 Level 2 付费产品体系</div><div class="adesc">以 L2 数据为核心设计 PC 端付费分层，L2 资金排行、监控预警、专属指标作为会员核心权益。参考优品的模块化设计，按功能组合灵活定价，构建从免费到付费的清晰转化路径。</div></div></div>
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">上线复盘工具，培养用户日常使用习惯</div><div class="adesc">复盘系统是高粘性功能的典型——每日使用场景强，用户养成习惯后极难离开。可从「历史行情回放」切入，逐步增加战法演练和复盘记录功能，用内容积累筑高竞争门槛。</div></div></div>
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">建立题材库与行业图谱数据体系</div><div class="adesc">「3秒定位行业龙头」背后是结构化的行业上下游数据库和题材标签体系。这类内容一旦建立，可在选股、资讯、投顾等多场景复用，是数据资产的高 ROI 投入方向。</div></div></div>
+      <div class="aitem"><span class="pri p2">P2</span><div class="atxt"><div class="atitle">评估极速交易通道的机构客户可行性</div><div class="adesc">机构量化客群 LTV 高、流失率低。建议先通过量化回测平台切入，验证机构客户的存在与规模，再评估极速交易通道的技术投入是否与客群体量匹配。</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div class="panel app" id="p-app">
+
+  <div class="section">
+    <div class="sec-t">产品矩阵</div>
+    <div class="prod-grid app">
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">APP 综合解决方案</div><span class="ptag tag-b">B端输出</span></div>
+        <div class="pcard-pos">以综合 APP 客户端框架整体输出给机构，覆盖证券全业务，以用户运营为核心的联合开发方案</div>
+        <ul><li>行情 / 交易 / 资讯 / 理财 / 业务办理</li><li>智能数据应用工具全集成</li><li>APP框架+中台+投顾全模块联合开发</li><li>以用户运营为核心的完整管理体系</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">股大咖 APP</div><span class="ptag tag-c">C端工具向</span></div>
+        <div class="pcard-pos">辅助决策工具型产品，以 AI 智能工具为核心差异化，主打「用 AI 辅助投资决策」</div>
+        <ul><li>AI 盯盘：涨跌异动智能监控推送</li><li>特色选股：全方位多因子价值筛选</li><li>智能诊股 + AI 问答神器</li><li>大牛直播：专家实时解盘问答</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">股牛牛 APP</div><span class="ptag tag-c">C端教育向</span></div>
+        <div class="pcard-pos">大V智能辅助决策及投资教育平台，内容化程度最高，主打帮助用户「建立交易体系」</div>
+        <ul><li>特色题材 · 买卖点（B/S信号）</li><li>独创超短+趋势战法复盘演练</li><li>实战直播室（导师每日热点解盘）</li><li>全市场独家量化情绪指标</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">优品股票通 APP</div><span class="ptag tag-c">C端综合向</span></div>
+        <div class="pcard-pos">一站式智能证券投资服务平台，覆盖最广，主打「全能型」投资者的综合服务需求</div>
+        <ul><li>全球行情（沪深/港美/期货/基金）</li><li>特色选股 + AI 盯盘 + 智能诊股</li><li>智能策略 · 大牛直播</li><li>个性化快捷导航 + 智能工具矩阵</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">核心功能清单</div>
+    <div class="feat-grid">
+      <div class="fgrp"><div class="fgrp-t">智能投顾 7 大工具</div><ul>
+        <li>智能诊股（五维综合评分体系）</li>
+        <li>智能选股（3000+ 因子多维筛选）</li>
+        <li>智能监控（实时行情+情报追踪）</li>
+        <li>智能筹码（持股分布可视化）</li>
+        <li>智能盯盘（自定义条件预警推送）</li>
+        <li>股价预测（AI 价格走势预测）</li>
+        <li>相似 K 线（历史形态匹配检索）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">L2 会员体系</div><ul>
+        <li>L2 股票池（专属数据权益）</li>
+        <li>L2 监控预警（主力动向实时）</li>
+        <li>L2 资金排行（主力流向识别）</li>
+        <li>L2 专属技术指标（衍生功能）</li>
+        <li>主力资金追踪（高净值刚需）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">行情与交易</div><ul>
+        <li>全球市场行情覆盖</li>
+        <li>特色榜单（捕捉市场先机）</li>
+        <li>全品类：股/基/期货/宏观</li>
+        <li>快捷交易接入</li>
+        <li>多账户统一管理</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">内容与社区</div><ul>
+        <li>实战直播室（每日解盘）</li>
+        <li>热点题材实时解读</li>
+        <li>投顾社区（用户内容生态）</li>
+        <li>策略商城（量化策略零售订阅）</li>
+        <li>股池实战精讲</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">策略与选股</div><ul>
+        <li>策略商城（可购买订阅）</li>
+        <li>特色题材选股（行业龙头定位）</li>
+        <li>智能策略（机器学习匹配）</li>
+        <li>买卖点信号系统</li>
+        <li>盘口逐笔深度分析（L2）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">运营与增值</div><ul>
+        <li>Level 2 分层付费会员体系</li>
+        <li>策略商城内容变现</li>
+        <li>消息推送 · 异动实时提醒</li>
+        <li>运营管理后台（B端标配）</li>
+        <li>个性化配置与界面导航</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">PM 视角 · 产品亮点拆解</div>
+    <div class="hl-grid">
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ede8f8;color:#5040B8">设计亮点</div>
+        <h3>7 大工具 = 投资决策全链路覆盖</h3>
+        <p class="desc">7 个工具并非随机堆砌，而是精准覆盖了投资的完整决策链：<strong>发现机会（选股/监控）→ 评估标的（诊股/筹码）→ 判断入场（买卖点/预测）→ 持仓管理（盯盘/相似K线）</strong>。用户每个决策节点都有工具支撑，在平台内可以走完完整的投资流程。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>工具矩阵的核心价值不在单个工具，而在于用户会在平台内完成整个投资决策流程——单日使用时长 × 用户留存都会因此显著提升。设计工具时不要孤立看，要看它在整条决策链中处于哪个节点。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ede8f8;color:#5040B8">核心功能</div>
+        <h3>智能盯盘：解决持仓焦虑的高意图推送</h3>
+        <p class="desc">用户设定盯盘条件（股票范围 + 触发条件 + 通知方式），系统后台实时计算公式，触发即推送。这解决了股民最大的焦虑：「不盯怕踏空，盯着太累」。用户无需常驻 APP——推送触达时才打开，是提升 DAU 的隐形利器。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>盯盘预警的核心价值是把用户从「主动看」变成「被动收」，大幅降低使用门槛。每次预警推送=一次高意图的用户唤醒（他此刻明确知道要做什么），转化率天然高于普通内容 Push 推送。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ede8f8;color:#5040B8">商业模式</div>
+        <h3>策略商城：卖「赚钱的方法论」而非工具</h3>
+        <p class="desc">把机构级量化策略「产品化」，以订阅形式卖给普通用户。底层逻辑：优品有 3000+ 因子和完善的量化体系，将其封装为用户可理解的策略产品。策略商城同时构建了内容生态，用第三方内容创作者降低平台的内容生产成本。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>策略商城本质是「卖认知」。用户为「赚钱的方法论」付费意愿远高于为工具付费——一个月 50 元的选股策略，用一次赚回来就值了。这是内容变现中单次决策摩擦最小、ROI 最高的形式之一。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#ede8f8;color:#5040B8">产品策略</div>
+        <h3>三款 C 端 APP：覆盖用户成长全周期</h3>
+        <p class="desc">股大咖（AI工具向）· 股牛牛（投资教育向）· 股票通（全能综合向）三款 APP 面向不同成熟度的用户——新手用股牛牛学方法，进阶用户用股大咖用 AI 工具，全能用户用股票通处理所有需求。三款覆盖用户生命周期不同阶段，基本不互相蚕食。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>多 APP 矩阵的核心风险是品牌分散与认知混乱。优品的解法是<strong>功能差异化 + 心智差异化</strong>，而非表面改个名字。我方在规划多产品线时，分层的标准应该是用户需求的质变，而非功能叠加的量变。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">可借鉴行动建议</div>
+    <div class="actions">
+      <div class="aitem"><span class="pri p0">P0</span><div class="atxt"><div class="atitle">上线智能盯盘：单个功能对 DAU 影响最直接</div><div class="adesc">自定义条件 + 实时后台计算 + 多通知方式。用户设置后无需每天主动打开，预警推送带来高意图回访。这是当前最值得优先立项的单个功能，建议本期排上。</div></div></div>
+      <div class="aitem"><span class="pri p0">P0</span><div class="atxt"><div class="atitle">建立智能诊股：用户感知价值最强的 AI 工具</div><div class="adesc">五维评分（热度/趋势/主力/题材/估值）输出综合评级，结构清晰，无需专业知识即可理解。是 AI 工具矩阵中教育成本最低、用户获得感最强的，适合作为整个智能工具体系的第一个破局点。</div></div></div>
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">按决策链路规划完整的智能工具矩阵</div><div class="adesc">不要零散上线功能，按「选股→评估→持仓→预警」的链路设计，让用户能在平台内完成投资决策闭环。每个节点至少一个工具，工具间相互引导，极大提升单日使用时长和整体留存。</div></div></div>
+      <div class="aitem"><span class="pri p2">P2</span><div class="atxt"><div class="atitle">探索策略商城：量化内容的高 ROI 变现路径</div><div class="adesc">待量化能力建设成熟后，将优质策略产品化上架。前期可先引入第三方内容，验证用户付费意愿和价格敏感度，再逐步过渡到自研策略商城。内容变现的 ROI 天然高于工具变现。</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ Data ══════════ -->
+<div class="panel dat" id="p-dat">
+
+  <div class="section">
+    <div class="sec-t">产品矩阵</div>
+    <div class="prod-grid dat">
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">优品数据服务（对外）</div><span class="ptag tag-b">B端商业化</span></div>
+        <div class="pcard-pos">面向机构客户的金融大数据商业化产品，覆盖多类型数据，支持本地同步和 API 双交付</div>
+        <ul><li>股票/基金/指数/期货/宏观经济</li><li>机构研报结构化数据</li><li>3000+ 自研量化因子</li><li>本地同步 + API 接口双交付模式</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">自研投研数据平台</div><span class="ptag tag-bc">内部+对外</span></div>
+        <div class="pcard-pos">优品自建的金融数据处理与分析平台，是所有 PC/APP 产品的底层数据底座</div>
+        <ul><li>证券领域语义解析 + 股票映射</li><li>3000+ 量化因子完整体系</li><li>GPU K线指标算法计算平台</li><li>分布式爬虫 + AI 自动化数据清洗</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">量化回测平台</div><span class="ptag tag-b">B端机构向</span></div>
+        <div class="pcard-pos">策略研究到实盘验证的全链路一站式量化工作台，机构量化团队的标准配置</div>
+        <ul><li>策略编写内置开发环境</li><li>历史数据完整回测服务</li><li>3000+ 量化因子完整接入</li><li>交易 API 一体化 · 本地 SDK</li></ul>
+      </div>
+      <div class="pcard">
+        <div class="pcard-hdr"><div class="pcard-name">基金投顾数据中台</div><span class="ptag tag-b">B端内嵌</span></div>
+        <div class="pcard-pos">为基金投顾业务提供底层数据支撑，资产配置系统和投顾决策的研究数据底座</div>
+        <ul><li>宏观分析数据体系</li><li>大类资产研究框架数据</li><li>基金研究与绩效评价数据</li><li>历史配置策略数据归档</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">核心功能与数据能力清单</div>
+    <div class="feat-grid">
+      <div class="fgrp"><div class="fgrp-t">数据覆盖范围</div><ul>
+        <li>A股 / 港股 / 美股完整行情</li>
+        <li>基金 / ETF / 债券数据</li>
+        <li>期货 / 期权 / 宏观经济</li>
+        <li>机构研报结构化提取</li>
+        <li>公告 / 新闻 / 舆情数据</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">自研因子体系</div><ul>
+        <li>3000+ 量化因子库</li>
+        <li>基本面因子（财务 / 估值）</li>
+        <li>技术面因子（趋势 / 动量）</li>
+        <li>资金面因子（主力 / 北上）</li>
+        <li>情绪面因子（舆情 / 热度）</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">技术处理能力</div><ul>
+        <li>自研分布式爬虫系统</li>
+        <li>AI 自动化数据清洗管线</li>
+        <li>GPU 加速 K线指标计算</li>
+        <li>证券领域语义解析 NLP</li>
+        <li>股票实体识别与映射</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">数据交付方式</div><ul>
+        <li>本地客户端安装同步</li>
+        <li>内网部署，数据不出公网</li>
+        <li>一键安装，增量同步自动建表</li>
+        <li>API 接口标准化快速接入</li>
+        <li>自定义字段与权限管控</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">量化研究能力</div><ul>
+        <li>策略编写一体化开发环境</li>
+        <li>历史数据完整回测引擎</li>
+        <li>因子有效性验证分析</li>
+        <li>交易 API 实盘一体接入</li>
+        <li>绩效归因分析报告</li>
+      </ul></div>
+      <div class="fgrp"><div class="fgrp-t">服务对象矩阵</div><ul>
+        <li>监管机构 · 交易所（合规数据）</li>
+        <li>券商 · 银行 · 基金 · 私募</li>
+        <li>量化机构 · 高频交易团队</li>
+        <li>金融科技公司（数据外包）</li>
+        <li>高校 · 科研院所（学术研究）</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">PM 视角 · 产品亮点拆解</div>
+    <div class="hl-grid">
+      <div class="hlcard">
+        <div class="hl-label" style="background:#dcf0e8;color:#0C6B52">核心壁垒</div>
+        <h3>3000+ 因子库：时间积累出来的护城河</h3>
+        <p class="desc">量化因子的积累需要：数据采集 × 学术研究 × 工程实现，每个有效因子背后都是时间和人力成本，且很多因子需要长期数据才能验证有效性。3000+ 因子意味着基本面、技术面、资金面、情绪面全覆盖——这种规模不是资金堆出来的，是时间堆出来的。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>因子库是量化产品的「弹药库」。用户越多，因子被使用验证的场景越多，有效因子被筛选出来的效率越高——这是一个典型的数据网络效应护城河。我方建设因子库，比数量更重要的是建立因子研发的工程体系。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#dcf0e8;color:#0C6B52">技术突破</div>
+        <h3>GPU 加速：技术选择决定产品体验上限</h3>
+        <p class="desc">传统 K线指标（MACD、KDJ、布林带等）在「全市场 × 多周期 × 实时更新」的场景下，CPU 运算会成为严重瓶颈。GPU 并行计算将运算量提升数十倍，使实时全市场因子计算成为可能——这是智能诊股、实时筹码等工具「实时性」的底层保障。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>GPU 加速不是炫技，而是解决「实时性」这一核心产品诉求。用户要看「现在」的诊股结果，不是五分钟前的。技术投入直接决定产品体验的上限，这是优品智能工具能做到实时的根本原因。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#dcf0e8;color:#0C6B52">商业设计</div>
+        <h3>双交付模式：几乎不存在因交付方式丢单</h3>
+        <p class="desc">本地同步（内网安全，数据不出网）面向监管/大型金融机构等对数据安全要求极高的客户；API 接口面向需要快速灵活接入的中小机构和科技公司。两种模式并存，使优品的数据服务几乎覆盖了所有类型的机构客户，没有因为交付方式不匹配而丢单的情况。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>本地同步客户的 ARPU 最高（定制化服务溢价）、流失率最低（迁移成本高）、但销售周期最长（需 IT 对接）。API 客户规模大但 ARPU 低。两者组合运营才能最大化数据板块的商业化收益。</p></div>
+      </div>
+      <div class="hlcard">
+        <div class="hl-label" style="background:#dcf0e8;color:#0C6B52">生态价值</div>
+        <h3>数据中台：一次建设，N 个产品的竞争力底座</h3>
+        <p class="desc">优品数据能力不只是对外销售的独立产品，更是所有 PC/APP 产品的底层支撑：智能诊股的评分来自因子库，实战直播的行情来自数据中台，高端交易终端的策略依赖回测平台。数据一次建设，在多个场景复用，边际成本趋近于零，ROI 极高。</p>
+        <div class="pm-box"><div class="pm-lbl">PM 洞察</div><p>数据中台是「杠杆型投入」——建设成本高，但能撬动多个上层产品的竞争力提升。这是优品整体产品能力强的根本原因：底座扎实，上层产品才能快速迭代。我方建设内部数据中台，先让内部产品受益，再考虑对外商业化。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-t">可借鉴行动建议</div>
+    <div class="actions">
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">启动因子库建设，明确分阶段路径</div><div class="adesc">3000+ 因子不是短期目标。建议分阶段：第一阶段建立 100 个高价值核心因子（基本面+技术面），验证工程框架和效果；第二阶段扩展资金面和情绪面；再逐步扩充规模。比数量更重要的是建立「因子研发-验证-上线」的完整工程体系。</div></div></div>
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">评估 GPU 加速 K线计算的可行性</div><div class="adesc">GPU 加速直接影响智能工具的实时体验，是实时诊股、实时筹码等功能的技术前提。建议技术团队评估现有 K线计算的性能瓶颈，若用户规模已到量级，GPU 加速的性价比会显著提升。</div></div></div>
+      <div class="aitem"><span class="pri p1">P1</span><div class="atxt"><div class="atitle">规划双交付模式的数据服务体系</div><div class="adesc">若规划 to-B 数据服务，本地同步+API 双轨并行是覆盖最广客群的方案。两类客户的销售模式、服务模式差异很大，需分团队运营：本地同步面向大型金融机构（高 ARPU）、API 面向中小科技公司（高规模）。</div></div></div>
+      <div class="aitem"><span class="pri p2">P2</span><div class="atxt"><div class="atitle">先建内部数据中台，再考虑对外商业化</div><div class="adesc">数据中台建设逻辑：先服务内部产品（降低各产品线重复采购数据的成本），在内部充分验证数据质量和服务稳定性后，再包装成对外产品商业化。内部用户是最好的测试客户，容忍度高且反馈直接。</div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  优品财富科技竞品分析 · PC 端 / APP 端 / 数据板块三维拆解 · 内部参考文档，请勿对外传播
+</div>
+</div>
+
+<script>
+function sw(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.tab.' + id).classList.add('active');
+  document.getElementById('p-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
